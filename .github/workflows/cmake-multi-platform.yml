@@ -1,17 +1,18 @@
-name: Build C++ for Linux and Windows
+name: Build Casino
 
 on:
   push:
     branches: [main]
   workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build:
-    name: Build on ${{ matrix.os }}
-
     strategy:
       fail-fast: false
       matrix:
@@ -20,21 +21,21 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Configure CMake
-        run: cmake -B build -DCMAKE_BUILD_TYPE=Release
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 
-      - name: Build
+      - name: Compile
         run: cmake --build build --config Release --parallel
 
       - name: Upload executable
         uses: actions/upload-artifact@v4
         with:
-          name: executable-${{ matrix.os }}
+          name: Casino-${{ matrix.os }}
           path: |
-            build/Release/*.exe
-            build/*.exe
-            build/*
-          if-no-files-found: warn
+            build/Casino
+            build/Casino.exe
+            build/Release/Casino.exe
+          if-no-files-found: error
