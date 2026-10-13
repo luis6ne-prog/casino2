@@ -3,10 +3,8 @@ name: Build Casino
 on:
   push:
     branches: [main]
+    tags: ['v*']
   workflow_dispatch:
-  push:
-    tags:
-      - 'v*'
 
 permissions:
   contents: write
